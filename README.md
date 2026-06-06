@@ -24,18 +24,6 @@ Produtor
 
 > Observação importante: o NDVI e as leituras IoT são simulados no app para fins de protótipo/MVP, mas são persistidos e consultados pela API real. A integração real com Sentinel Hub e dispositivos físicos pode ser evoluída em versões futuras.
 
-## Requisitos da Sprint Mobile atendidos
-
-| Requisito | Status |
-|---|---|
-| Mínimo de 5 telas com navegação | Atendido |
-| Navegação com React Navigation | Atendido |
-| CRUD usando API Java com Axios | Atendido |
-| Tratamento de erros, loaders e feedback visual | Atendido |
-| Estilização com identidade visual própria | Atendido |
-| Arquitetura organizada por telas, serviços, componentes, tipos e utilitários | Atendido |
-| Demonstração em vídeo das funcionalidades | Pendente inserir link |
-
 ## Tecnologias utilizadas
 
 | Tecnologia | Versão | Uso |
@@ -78,8 +66,6 @@ Os dados principais são buscados e persistidos pela API:
 - Análise de risco
 - Alertas
 - Recomendações
-
-## Funcionalidades
 
 ### Autenticação
 
@@ -204,7 +190,7 @@ npm run web
 | Nome | RM |
 |---|---|
 | Lucas Gonçalves Viana | RM |
-| Deryk de Souza Queiroz | RM |
+| Deryk de Souza Queiroz | RM563412 |
 | Vinicius Paschoeto da Silva | RM |
 
 ## Links
