@@ -3,8 +3,6 @@ import { View, Text, StyleSheet, Animated, LayoutChangeEvent } from 'react-nativ
 import Svg, { Path, Circle, Line, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { theme } from '../constants/theme';
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-
 export type NdviChartPoint = {
   label: string;
   value: number;
@@ -16,12 +14,7 @@ type NdviLineChartProps = {
   maxValue?: number;
 };
 
-// ─── Animated path wrapper ──────────────────────────────────────────────────
-
 const AnimatedPath = Animated.createAnimatedComponent(Path);
-
-// ─── Constants ──────────────────────────────────────────────────────────────
-
 const CHART_HEIGHT = 220;
 const PADDING_LEFT = 42;
 const PADDING_RIGHT = 16;
@@ -33,16 +26,12 @@ const Y_TICK_COUNT = 5;
 const Y_PADDING = 0.05;
 const Y_MIN_RANGE = 0.1;
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-/** Compute dynamic Y-axis scale from data, with padding and safety clamps. */
 function computeYScale(
   data: NdviChartPoint[],
   minProp?: number,
   maxProp?: number,
 ): { yMin: number; yMax: number; yRange: number; yTicks: number[] } {
   if (minProp != null && maxProp != null) {
-    // Use explicit props
     const range = maxProp - minProp || Y_MIN_RANGE;
     return { yMin: minProp, yMax: maxProp, yRange: range, yTicks: buildTicks(minProp, maxProp) };
   }
@@ -54,12 +43,10 @@ function computeYScale(
   let lo = minProp ?? Math.max(0, minData - Y_PADDING);
   let hi = maxProp ?? Math.min(1, maxData + Y_PADDING);
 
-  // Guarantee minimum visible range so flat data doesn't collapse
   if (hi - lo < Y_MIN_RANGE) {
     const mid = (lo + hi) / 2;
     lo = Math.max(0, mid - Y_MIN_RANGE / 2);
     hi = Math.min(1, lo + Y_MIN_RANGE);
-    // Re-adjust lo in case hi hit the ceiling
     if (hi - lo < Y_MIN_RANGE) lo = Math.max(0, hi - Y_MIN_RANGE);
   }
 
@@ -75,8 +62,6 @@ function buildTicks(lo: number, hi: number): number[] {
   return ticks;
 }
 
-// ─── Component ──────────────────────────────────────────────────────────────
-
 export default function NdviLineChart({
   data,
   minValue,
@@ -84,32 +69,22 @@ export default function NdviLineChart({
 }: NdviLineChartProps) {
   const [containerWidth, setContainerWidth] = useState(0);
   const animProgress = useRef(new Animated.Value(0)).current;
-
-  // Dynamic Y scale
   const { yMin, yMax, yRange, yTicks } = computeYScale(data, minValue, maxValue);
-
-  // Usable drawing area
   const drawWidth = containerWidth - PADDING_LEFT - PADDING_RIGHT;
   const drawHeight = CHART_HEIGHT - PADDING_TOP - PADDING_BOTTOM;
 
-  // ── Layout handler ──
   function handleLayout(e: LayoutChangeEvent) {
     setContainerWidth(e.nativeEvent.layout.width);
   }
-
-  // ── Map data to pixel coordinates ──
   function getX(index: number): number {
     if (data.length <= 1) return PADDING_LEFT;
     return PADDING_LEFT + (index / (data.length - 1)) * drawWidth;
   }
-
   function getY(value: number): number {
     const clamped = Math.max(yMin, Math.min(yMax, value));
     const ratio = (clamped - yMin) / yRange;
     return PADDING_TOP + drawHeight - ratio * drawHeight;
   }
-
-  // ── Build SVG path string ──
   function buildLinePath(): string {
     if (data.length === 0 || drawWidth <= 0) return '';
     return data
@@ -121,7 +96,6 @@ export default function NdviLineChart({
       .join(' ');
   }
 
-  // ── Build area (gradient fill under line) path ──
   function buildAreaPath(): string {
     if (data.length === 0 || drawWidth <= 0) return '';
     const baseline = PADDING_TOP + drawHeight;
@@ -139,7 +113,6 @@ export default function NdviLineChart({
     return `${lineSegments} L ${lastX} ${baseline} L ${firstX} ${baseline} Z`;
   }
 
-  // ── Estimate total path length for dash animation ──
   function estimatePathLength(): number {
     let len = 0;
     for (let i = 1; i < data.length; i++) {
@@ -150,7 +123,6 @@ export default function NdviLineChart({
     return len || 1;
   }
 
-  // ── Animation ──
   useEffect(() => {
     if (containerWidth <= 0 || data.length === 0) return;
     animProgress.setValue(0);
@@ -168,7 +140,6 @@ export default function NdviLineChart({
     outputRange: [totalLength, 0],
   });
 
-  // ── Render ──
   const linePath = buildLinePath();
   const areaPath = buildAreaPath();
   const ready = containerWidth > 0 && data.length > 0;
@@ -177,15 +148,12 @@ export default function NdviLineChart({
     <View style={styles.container} onLayout={handleLayout}>
       {ready && (
         <Svg width={containerWidth} height={CHART_HEIGHT}>
-          {/* Gradient definition for the area fill */}
           <Defs>
             <LinearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
               <Stop offset="0" stopColor={theme.primary} stopOpacity="0.15" />
               <Stop offset="1" stopColor={theme.primary} stopOpacity="0" />
             </LinearGradient>
           </Defs>
-
-          {/* Horizontal grid lines */}
           {yTicks.map((tick, idx) => {
             const y = getY(tick);
             return (
@@ -203,10 +171,8 @@ export default function NdviLineChart({
             );
           })}
 
-          {/* Area fill under the line */}
           <Path d={areaPath} fill="url(#areaGrad)" />
 
-          {/* Animated line */}
           <AnimatedPath
             d={linePath}
             fill="none"
@@ -218,7 +184,6 @@ export default function NdviLineChart({
             strokeDashoffset={strokeDashoffset}
           />
 
-          {/* Data points */}
           {data.map((point, i) => (
             <Circle
               key={i}
@@ -233,7 +198,6 @@ export default function NdviLineChart({
         </Svg>
       )}
 
-      {/* Y-axis labels (positioned absolutely on top of SVG) */}
       {ready &&
         yTicks.map((tick, idx) => (
           <Text
@@ -250,7 +214,6 @@ export default function NdviLineChart({
           </Text>
         ))}
 
-      {/* X-axis labels */}
       {ready && (
         <View
           style={[
@@ -284,8 +247,6 @@ export default function NdviLineChart({
     </View>
   );
 }
-
-// ─── Styles ──────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   container: {

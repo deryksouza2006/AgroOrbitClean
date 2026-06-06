@@ -1,9 +1,7 @@
 import { PolygonPoint } from '../types/CropArea';
 
 /**
- * Builds a GeoJSON Polygon geometry from an array of PolygonPoint.
- * Coordinates follow GeoJSON convention: [longitude, latitude].
- * The first point is repeated at the end to close the ring.
+ * Constroi o Geojson do poligono
  */
 export function buildGeoJsonPolygon(
   points: PolygonPoint[],
@@ -11,7 +9,6 @@ export function buildGeoJsonPolygon(
   if (points.length < 3) return null;
 
   const coords = points.map((p) => [p.longitude, p.latitude]);
-  // Close the ring by repeating the first coordinate
   coords.push([points[0].longitude, points[0].latitude]);
 
   return {
@@ -20,9 +17,6 @@ export function buildGeoJsonPolygon(
   };
 }
 
-/**
- * Calculates the centroid (geometric center) of a set of polygon points.
- */
 export function calculateCentroid(
   points: PolygonPoint[],
 ): PolygonPoint | null {
@@ -38,7 +32,7 @@ export function calculateCentroid(
 }
 
 /**
- * Serializes a GeoJSON Polygon to a formatted JSON string.
+ * converte Geojson em um Json
  */
 export function geoJsonToString(
   geoJson: { type: 'Polygon'; coordinates: number[][][] } | null,

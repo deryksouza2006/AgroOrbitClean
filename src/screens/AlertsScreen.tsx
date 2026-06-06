@@ -59,7 +59,6 @@ export default function AlertsScreen() {
       subtitle="Gerencie os alertas gerados por satélite e IoT."
       onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
     >
-      {/* Filter tabs */}
       <View style={styles.filterRow}>
         {FILTERS.map((f) => (
           <TouchableOpacity

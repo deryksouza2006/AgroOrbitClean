@@ -60,8 +60,6 @@ export default function CropAreaFormScreen({ navigation, route }: Props) {
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-
-  // ── Map / polygon state ──
   const [locationMode, setLocationMode] = useState<LocationMode>('coords');
   const [polygonPoints, setPolygonPoints] = useState<PolygonPoint[]>([]);
   const [boundaryGeoJson, setBoundaryGeoJson] = useState<string>('');
@@ -86,7 +84,6 @@ export default function CropAreaFormScreen({ navigation, route }: Props) {
           setDescription(area.description ?? '');
           setFarmId(area.farmId);
 
-          // Restore polygon data if present
           if (area.polygonPoints && area.polygonPoints.length > 0) {
             setPolygonPoints(area.polygonPoints);
             setBoundaryGeoJson(area.boundaryGeoJson ?? '');
@@ -101,7 +98,6 @@ export default function CropAreaFormScreen({ navigation, route }: Props) {
         setInitialLoading(false);
       }
     })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function validate(): boolean {
@@ -116,7 +112,6 @@ export default function CropAreaFormScreen({ navigation, route }: Props) {
       if (!isValidCoordinate(latitude)) e.latitude = 'Latitude inválida';
       if (!isValidCoordinate(longitude)) e.longitude = 'Longitude inválida';
     } else {
-      // map mode – polygon is optional but if started must have >= 3 points
       if (polygonConfirmed && polygonPoints.length < 3) {
         e.polygon = 'O polígono precisa ter pelo menos 3 pontos';
       }
@@ -158,7 +153,6 @@ export default function CropAreaFormScreen({ navigation, route }: Props) {
     }
   }
 
-  // ── Map confirm handler ──
   const handleMapConfirm = useCallback(
     (pts: PolygonPoint[], geoJson: string) => {
       setPolygonPoints(pts);
@@ -195,7 +189,6 @@ export default function CropAreaFormScreen({ navigation, route }: Props) {
             <AppInput label="Cultura" value={crop} onChangeText={setCrop} placeholder="Ex: Milho, Soja, Cana" error={errors.crop} />
             <AppInput label="Tamanho da área" value={areaSize} onChangeText={setAreaSize} placeholder="Ex: 4.5" keyboardType="numeric" error={errors.areaSize} />
 
-            {/* Unit selector */}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>Unidade de medida</Text>
               <View style={styles.unitRow}>
@@ -213,7 +206,6 @@ export default function CropAreaFormScreen({ navigation, route }: Props) {
               </View>
             </View>
 
-            {/* Farm selector */}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>Fazenda vinculada</Text>
               {errors.farmId && <Text style={styles.fieldError}>{errors.farmId}</Text>}
@@ -230,9 +222,6 @@ export default function CropAreaFormScreen({ navigation, route }: Props) {
               ))}
             </View>
 
-            {/* ════════════════════════════════════════════════════════════════
-                 LOCATION MODE SELECTOR
-               ════════════════════════════════════════════════════════════════ */}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>Localização do talhão</Text>
               <View style={styles.modeRow}>
@@ -260,7 +249,6 @@ export default function CropAreaFormScreen({ navigation, route }: Props) {
               </View>
             </View>
 
-            {/*Coordenadas latitude  e longitude*/}
             {locationMode === 'coords' && (
               <>
                 <AppInput label="Latitude (opcional)" value={latitude} onChangeText={setLatitude} placeholder="Ex: -21.18" keyboardType="numeric" error={errors.latitude} />
@@ -268,7 +256,6 @@ export default function CropAreaFormScreen({ navigation, route }: Props) {
               </>
             )}
 
-            {/* Mapa*/}
             {locationMode === 'map' && (
               <View style={styles.mapSection}>
                 <MapPolygonPicker
@@ -280,7 +267,6 @@ export default function CropAreaFormScreen({ navigation, route }: Props) {
                   <Text style={styles.fieldError}>{errors.polygon}</Text>
                 )}
 
-                {/* Poligono confirmado */}
                 {polygonConfirmed && polygonPoints.length > 0 && (
                   <View style={styles.confirmedCard}>
                     <View style={styles.confirmedHeader}>
@@ -290,7 +276,6 @@ export default function CropAreaFormScreen({ navigation, route }: Props) {
                       </Text>
                     </View>
 
-                    {/* Lista d epontos */}
                     <View style={styles.pointsList}>
                       {polygonPoints.map((p, idx) => (
                         <View key={idx} style={styles.pointRow}>
@@ -352,7 +337,6 @@ const styles = StyleSheet.create({
   multiline: { height: 80, textAlignVertical: 'top' },
   cancelBtn: { marginTop: -8 },
 
-  // ── Location mode selector ──
   modeRow: {
     flexDirection: 'row',
     gap: 10,
@@ -386,12 +370,10 @@ const styles = StyleSheet.create({
     color: theme.primary,
   },
 
-  // ── Map section ──
   mapSection: {
     marginBottom: 8,
   },
 
-  // ── Confirmed card ──
   confirmedCard: {
     marginTop: 12,
     borderRadius: 12,

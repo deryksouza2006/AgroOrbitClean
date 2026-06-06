@@ -54,7 +54,6 @@ export default function ProfileScreen() {
       subtitle="Gerencie seus dados e preferências de notificação."
       onMenuPress={() => drawerNav.dispatch(DrawerActions.openDrawer())}
     >
-      {/* User card */}
       <View style={styles.userCard}>
         <View style={styles.avatarLg}>
           <Text style={styles.avatarText}>{initials}</Text>
@@ -71,7 +70,6 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Alert preferences */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Preferências de Alerta</Text>
         <SwitchRow label="Alertas de seca" value={droughtAlert} onChange={setDroughtAlert} />
@@ -80,7 +78,6 @@ export default function ProfileScreen() {
         <SwitchRow label="Sensor crítico" value={sensorAlert} onChange={setSensorAlert} />
       </View>
 
-      {/* Severity selector */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Nível Mínimo de Severidade</Text>
         <View style={styles.severityRow}>
@@ -98,7 +95,6 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Logout */}
       <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
         <LogOut size={18} color={theme.red} />
         <Text style={styles.logoutLabel}>Sair da conta</Text>

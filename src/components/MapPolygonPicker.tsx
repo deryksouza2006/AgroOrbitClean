@@ -18,7 +18,6 @@ interface MapPolygonPickerProps {
   onConfirm: (points: PolygonPoint[], geoJson: string) => void;
 }
 
-// ─── Leaflet HTML ────────────────────────────────────────────────────────────
 function getMapHtml(initialCenter: [number, number], initialZoom: number): string {
   return `
 <!DOCTYPE html>
@@ -184,7 +183,6 @@ function getMapHtml(initialCenter: [number, number], initialZoom: number): strin
 `;
 }
 
-// ─── Component ───────────────────────────────────────────────────────────────
 export default function MapPolygonPicker({ initialPoints, onConfirm }: MapPolygonPickerProps) {
   const webViewRef = useRef<WebView>(null);
   const [points, setPoints] = useState<PolygonPoint[]>(initialPoints ?? []);
@@ -193,8 +191,6 @@ export default function MapPolygonPicker({ initialPoints, onConfirm }: MapPolygo
   const [searchResult, setSearchResult] = useState<string | null>(null);
   const [searchError, setSearchError] = useState<string | null>(null);
   const initializedRef = useRef(false);
-
-  // Initial center: Mogi das Cruzes, SP
   const CENTER: [number, number] = [-23.5228, -46.1884];
   const INITIAL_ZOOM = 13;
 
@@ -225,7 +221,7 @@ export default function MapPolygonPicker({ initialPoints, onConfirm }: MapPolygo
           setPoints(pts);
         }
       } catch {
-        // Ignore non-JSON messages
+        // Ignora mensagem json
       }
     },
     [],
@@ -240,7 +236,6 @@ export default function MapPolygonPicker({ initialPoints, onConfirm }: MapPolygo
     }
   }, [initialPoints, sendToWebView]);
 
-  // ── Search ──
   const handleSearch = useCallback(async () => {
     const q = searchQuery.trim();
     if (!q) return;
@@ -272,7 +267,6 @@ export default function MapPolygonPicker({ initialPoints, onConfirm }: MapPolygo
     }
   }, [searchQuery, sendToWebView]);
 
-  // ── Actions ──
   const handleRemoveLast = useCallback(() => {
     sendToWebView({ type: 'removeLastPoint' });
   }, [sendToWebView]);
@@ -291,7 +285,6 @@ export default function MapPolygonPicker({ initialPoints, onConfirm }: MapPolygo
 
   return (
     <View style={styles.wrapper}>
-      {/* ── Search Bar ── */}
       <View style={styles.searchRow}>
         <TextInput
           style={styles.searchInput}
@@ -316,7 +309,6 @@ export default function MapPolygonPicker({ initialPoints, onConfirm }: MapPolygo
         </TouchableOpacity>
       </View>
 
-      {/* Search result card */}
       {searchResult && (
         <View style={styles.resultCard}>
           <Text style={styles.resultIcon}>📍</Text>
@@ -331,7 +323,6 @@ export default function MapPolygonPicker({ initialPoints, onConfirm }: MapPolygo
         </View>
       )}
 
-      {/* ── Map ── */}
       <View style={styles.mapContainer}>
         <WebView
           ref={webViewRef}
@@ -352,12 +343,10 @@ export default function MapPolygonPicker({ initialPoints, onConfirm }: MapPolygo
               <Text style={styles.mapLoadingText}>Carregando mapa…</Text>
             </View>
           )}
-          // Prevent zoom gestures from being captured by parent scroll
           {...(Platform.OS === 'android' ? { overScrollMode: 'never' as const } : {})}
         />
       </View>
 
-      {/* Point count badge */}
       <View style={styles.pointsBadge}>
         <Text style={styles.pointsBadgeText}>
           {points.length} {points.length === 1 ? 'ponto' : 'pontos'} marcado{points.length !== 1 ? 's' : ''}
@@ -369,7 +358,6 @@ export default function MapPolygonPicker({ initialPoints, onConfirm }: MapPolygo
         )}
       </View>
 
-      {/* ── Action Buttons ── */}
       <View style={styles.actionsRow}>
         <TouchableOpacity
           style={[styles.actionBtn, styles.actionOutline]}
@@ -409,12 +397,10 @@ export default function MapPolygonPicker({ initialPoints, onConfirm }: MapPolygo
   );
 }
 
-// ─── Styles ──────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
   wrapper: {
     marginBottom: 16,
   },
-  // Search
   searchRow: {
     flexDirection: 'row',
     gap: 8,
@@ -444,7 +430,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 14,
   },
-  // Result card
   resultCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -470,7 +455,6 @@ const styles = StyleSheet.create({
     flex: 1,
     lineHeight: 18,
   },
-  // Map
   mapContainer: {
     height: 340,
     borderRadius: 14,
@@ -498,7 +482,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 13,
   },
-  // Points badge
   pointsBadge: {
     marginTop: 10,
     paddingVertical: 8,
@@ -518,7 +501,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2,
   },
-  // Actions
   actionsRow: {
     flexDirection: 'row',
     gap: 8,

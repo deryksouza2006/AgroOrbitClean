@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -52,6 +53,41 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
     ? user.name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase()
     : 'DR';
 
+  function handleNavigate(itemName: (typeof MENU_ITEMS)[number]['name']) {
+    if (itemName === 'Talhões') {
+      navigation.dispatch(
+        CommonActions.navigate({
+          name: 'Talhões',
+          params: {
+            screen: 'CropAreasScreen',
+            params: {
+              mode: 'all',
+            },
+          },
+        }),
+      );
+      return;
+    }
+
+    if (itemName === 'Fazendas') {
+      navigation.dispatch(
+        CommonActions.navigate({
+          name: 'Fazendas',
+          params: {
+            screen: 'FarmsScreen',
+          },
+        }),
+      );
+      return;
+    }
+
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: itemName,
+      }),
+    );
+  }
+
   return (
     <View
       style={[
@@ -82,24 +118,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
             <TouchableOpacity
               key={item.name}
               style={[styles.menuItem, isActive && styles.menuItemActive]}
-              onPress={() => {
-                if (item.name === 'Talhões') {
-                  navigation.navigate(
-                    'Talhões' as never,
-                    {
-                      screen: 'CropAreasScreen',
-                      params: {
-                        mode: 'all',
-                        farmId: undefined,
-                        farmName: undefined,
-                      },
-                    } as never,
-                  );
-                  return;
-                }
-
-                navigation.navigate(item.name as never);
-              }}
+              onPress={() => handleNavigate(item.name)}
             >
               <item.Icon
                 size={20}

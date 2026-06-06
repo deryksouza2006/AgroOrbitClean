@@ -11,6 +11,6 @@ export function isValidNumber(value: string): boolean {
 }
 
 export function isValidCoordinate(value: string): boolean {
-  if (!value.trim()) return true; // optional
+  if (!value.trim()) return true;
   return isValidNumber(value);
 }

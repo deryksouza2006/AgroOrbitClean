@@ -1,13 +1,14 @@
 import React, { useCallback, useState } from 'react';
 import { Alert, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation, DrawerActions, useFocusEffect } from '@react-navigation/native';
+import type { DrawerNavigationProp } from '@react-navigation/drawer';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Plus, Map } from 'lucide-react-native';
 import { Farm } from '../types/Farm';
 import { farmService } from '../services/farmService';
 import { cropAreaService } from '../services/cropAreaService';
 import { useAuth } from '../contexts/AuthContext';
-import { FarmsStackParamList } from '../navigation/types';
+import { DrawerParamList, FarmsStackParamList } from '../navigation/types';
 import { theme } from '../constants/theme';
 import ScreenContainer from '../components/ScreenContainer';
 import FarmCard from '../components/FarmCard';
@@ -17,7 +18,7 @@ import EmptyState from '../components/EmptyState';
 type Props = NativeStackScreenProps<FarmsStackParamList, 'FarmsScreen'>;
 
 export default function FarmsScreen({ navigation }: Props) {
-  const drawerNav = useNavigation();
+  const drawerNav = useNavigation<DrawerNavigationProp<DrawerParamList>>();
   const { user } = useAuth();
   const [farms, setFarms] = useState<Farm[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,13 +34,16 @@ export default function FarmsScreen({ navigation }: Props) {
     try {
       const data = await farmService.getAll(user.id);
 
+      // Buscar talhões de todas as fazendas para calcular cropAreasCount
       const farmIds = data.map((f) => f.id);
       let cropAreas: { farmId: number }[] = [];
       try {
         cropAreas = await cropAreaService.getAll(farmIds);
       } catch {
+        // Se falhar, continua com cropAreasCount = 0
       }
 
+      // Calcular cropAreasCount para cada fazenda
       const farmsWithCount = data.map((farm) => ({
         ...farm,
         cropAreasCount: cropAreas.filter((area) => area.farmId === farm.id).length,
@@ -111,13 +115,14 @@ export default function FarmsScreen({ navigation }: Props) {
             key={farm.id}
             farm={farm}
             onViewCropAreas={() => {
-              drawerNav.navigate(
-                'Talhões' as never,
-                {
-                  screen: 'CropAreasScreen',
-                  params: { mode: 'farm', farmId: farm.id, farmName: farm.name },
-                } as never,
-              );
+              drawerNav.navigate('Talhões', {
+                screen: 'CropAreasScreen',
+                params: {
+                  mode: 'farm',
+                  farmId: farm.id,
+                  farmName: farm.name,
+                },
+              });
             }}
             onEdit={() => navigation.navigate('FarmForm', { farmId: farm.id })}
             onDelete={() => handleDelete(farm)}

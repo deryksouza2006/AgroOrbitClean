@@ -5,7 +5,7 @@ import { extractPageContent, fromApiCropArea, toApiCropAreaRequest } from '../ut
 
 export const cropAreaService = {
   async getAll(allowedFarmIds?: number[]): Promise<CropArea[]> {
-    // No mobile, talhões sempre devem ser filtrados pelas fazendas do usuário logado.
+    //talhões sempre devem ser filtrados pelas fazendas do usuário logado.
     // Sem fazendas permitidas, retorna vazio e evita exibir dados de outra conta.
     if (!allowedFarmIds || allowedFarmIds.length === 0) {
       return [];

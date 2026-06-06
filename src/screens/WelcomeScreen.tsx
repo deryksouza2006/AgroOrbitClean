@@ -13,7 +13,6 @@ export default function WelcomeScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* Logo */}
         <View style={styles.logoSection}>
           <View style={styles.logoIcon}>
             <Sprout size={40} color={theme.primary} />
@@ -22,7 +21,6 @@ export default function WelcomeScreen({ navigation }: Props) {
           <Text style={styles.logoTagline}>Monitoramento Agrícola Inteligente</Text>
         </View>
 
-        {/* Features */}
         <View style={styles.features}>
           <View style={styles.featureItem}>
             <View style={[styles.featureIcon, { backgroundColor: `${theme.blue}22` }]}>
@@ -61,7 +59,6 @@ export default function WelcomeScreen({ navigation }: Props) {
           </View>
         </View>
 
-        {/* Buttons */}
         <View style={styles.buttons}>
           <AppButton
             label="Entrar"

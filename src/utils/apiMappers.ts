@@ -8,8 +8,6 @@ import { Dashboard, NdviPoint } from '../types/Dashboard';
 import { ClimateAlert, AlertType, AlertSeverity, AlertStatus } from '../types/ClimateAlert';
 import { Recommendation, RecommendationPriority } from '../types/Recommendation';
 
-// ─── Page extraction ────────────────────────────────────────────────────────
-
 /**
  * Extrai o conteúdo de uma resposta paginada da API Spring Boot.
  * Se a resposta tiver .content (Page), retorna content.
@@ -28,8 +26,6 @@ export function extractPageContent<T>(data: unknown): T[] {
   }
   return [];
 }
-
-// ─── Area Unit mapping ──────────────────────────────────────────────────────
 
 const AREA_UNIT_TO_API: Record<string, string> = {
   ha: 'HA',
@@ -50,8 +46,6 @@ export function toApiAreaUnit(unit: AreaUnit): string {
 export function fromApiAreaUnit(unit: string): AreaUnit {
   return AREA_UNIT_FROM_API[unit] ?? 'ha';
 }
-
-// ─── CropArea Status mapping ────────────────────────────────────────────────
 
 const STATUS_TO_API: Record<string, string> = {
   HEALTHY: 'NORMAL',
@@ -76,8 +70,6 @@ export function fromApiCropAreaStatus(status: string): CropAreaStatus {
   return STATUS_FROM_API[status] ?? 'HEALTHY';
 }
 
-// ─── Sensor Type mapping ────────────────────────────────────────────────────
-
 const SENSOR_TYPE_TO_API: Record<string, string> = {
   SOIL_MOISTURE: 'SOIL_MOISTURE',
   TEMPERATURE: 'TEMPERATURE',
@@ -100,8 +92,6 @@ export function fromApiSensorType(type: string): SensorType {
   return SENSOR_TYPE_FROM_API[type] ?? 'SOIL_MOISTURE';
 }
 
-// ─── Sensor Status mapping ──────────────────────────────────────────────────
-
 const SENSOR_STATUS_TO_API: Record<string, string> = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
@@ -122,8 +112,6 @@ export function toApiSensorStatus(status: SensorStatus): string {
 export function fromApiSensorStatus(status: string): SensorStatus {
   return SENSOR_STATUS_FROM_API[status] ?? 'ACTIVE';
 }
-
-// ─── Alert mapping ──────────────────────────────────────────────────────────
 
 const ALERT_STATUS_FROM_API: Record<string, AlertStatus> = {
   OPEN: 'OPEN',
@@ -155,9 +143,6 @@ const ALERT_SEVERITY_FROM_API: Record<string, AlertSeverity> = {
   CRITICAL: 'CRITICAL',
 };
 
-// ─── Entity Mappers ─────────────────────────────────────────────────────────
-
-// User
 export function fromApiUser(data: Record<string, unknown>): User {
   const rawRole = ((data.role as string) ?? 'PRODUCER').replace('ROLE_', '');
   const role = (['PRODUCER', 'ADMIN', 'TECHNICIAN'].includes(rawRole) ? rawRole : 'PRODUCER') as User['role'];
@@ -172,7 +157,6 @@ export function fromApiUser(data: Record<string, unknown>): User {
   };
 }
 
-// Farm
 export function fromApiFarm(data: Record<string, unknown>): Farm {
   const rawStatus = (data.status as string) ?? 'HEALTHY';
   const status = (['HEALTHY', 'ATTENTION', 'CRITICAL'].includes(rawStatus) ? rawStatus : 'HEALTHY') as FarmStatus;
@@ -206,9 +190,7 @@ export function toApiFarmRequest(
   };
 }
 
-// CropArea
 export function fromApiCropArea(data: Record<string, unknown>): CropArea {
-  // latitude/longitude can be nested in location or at top level
   const location = data.location as Record<string, unknown> | undefined;
   const lat = (location?.latitude as number) ?? (data.latitude as number) ?? undefined;
   const lng = (location?.longitude as number) ?? (data.longitude as number) ?? undefined;
@@ -248,7 +230,6 @@ export function toApiCropAreaRequest(
   };
 }
 
-// Sensor
 export function fromApiSensor(data: Record<string, unknown>): Sensor {
   return {
     id: (data.id as number) ?? 0,
@@ -272,7 +253,6 @@ export function toApiSensorRequest(
   };
 }
 
-// SensorReading
 export function fromApiSensorReading(data: Record<string, unknown>): SensorReading {
   return {
     id: (data.id as number) ?? 0,
@@ -298,7 +278,6 @@ export function toApiSensorReadingRequest(
   };
 }
 
-// SatelliteData
 export function fromApiSatelliteData(data: Record<string, unknown>): SatelliteData {
   return {
     id: (data.id as number) ?? 0,
@@ -328,7 +307,6 @@ export function toApiSatelliteDataRequest(
   };
 }
 
-// Dashboard
 export function fromApiDashboard(data: Record<string, unknown>): Dashboard {
   const history = Array.isArray(data.ndviHistory)
     ? (data.ndviHistory as Array<Record<string, unknown>>).map(
@@ -357,7 +335,6 @@ export function fromApiDashboard(data: Record<string, unknown>): Dashboard {
       }))
     : [];
 
-  // Accept both legacy and real API field names
   const criticalFromApi = Array.isArray(data.areasInRisk)
     ? (data.areasInRisk as Array<Record<string, unknown>>).map((c) => ({
         id: (c.id as number) ?? 0,
@@ -380,7 +357,6 @@ export function fromApiDashboard(data: Record<string, unknown>): Dashboard {
   };
 }
 
-// ClimateAlert
 export function fromApiClimateAlert(data: Record<string, unknown>): ClimateAlert {
   const rawType = (data.alertType as string) ?? (data.type as string) ?? '';
   const mappedType: AlertType = ALERT_TYPE_FROM_API[rawType] ?? 'DROUGHT_RISK';
@@ -403,7 +379,6 @@ export function fromApiClimateAlert(data: Record<string, unknown>): ClimateAlert
   };
 }
 
-// Recommendation
 export function fromApiRecommendation(data: Record<string, unknown>): Recommendation {
   const rawPriority = (data.priority as string) ?? 'MEDIUM';
   const priority = (['LOW', 'MEDIUM', 'HIGH', 'URGENT'].includes(rawPriority) ? rawPriority : 'MEDIUM') as RecommendationPriority;
