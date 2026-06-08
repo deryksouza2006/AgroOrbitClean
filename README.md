@@ -132,19 +132,91 @@ Os dados principais são buscados e persistidos pela API:
 
 ## Estrutura de pastas
 
-```text
-AgroOrbit/
-├── App.tsx
-├── index.ts
+```
+AgroOrbitClean-main/
+├── assets/
+│   ├── adaptive-icon.png
+│   ├── favicon.png
+│   ├── icon.png
+│   └── splash-icon.png
 ├── src/
-│   ├── components/       # Componentes reutilizáveis
-│   ├── constants/        # Tema e rotas da API
-│   ├── contexts/         # Autenticação e sessão
-│   ├── navigation/       # Drawer, stacks e tipos de navegação
-│   ├── screens/          # Telas do aplicativo
-│   ├── services/         # Comunicação com a API
-│   ├── types/            # Tipos TypeScript
-│   └── utils/            # Mappers, formatadores, validações e helpers
+│   ├── components/
+│   │   ├── AlertCard.tsx
+│   │   ├── AppButton.tsx
+│   │   ├── AppInput.tsx
+│   │   ├── CropAreaCard.tsx
+│   │   ├── EmptyState.tsx
+│   │   ├── FarmCard.tsx
+│   │   ├── LoadingState.tsx
+│   │   ├── MapPolygonPicker.tsx
+│   │   ├── NdviLineChart.tsx
+│   │   ├── RecommendationCard.tsx
+│   │   ├── ScreenContainer.tsx
+│   │   ├── StatusBadge.tsx
+│   │   └── SummaryCard.tsx
+│   ├── constants/
+│   │   ├── apiRoutes.ts
+│   │   └── theme.ts
+│   ├── contexts/
+│   │   └── AuthContext.tsx
+│   ├── navigation/
+│   │   ├── AppDrawer.tsx
+│   │   ├── AuthStack.tsx
+│   │   ├── CropAreasStack.tsx
+│   │   ├── FarmsStack.tsx
+│   │   ├── RootNavigator.tsx
+│   │   └── types.ts
+│   ├── screens/
+│   │   ├── AlertsScreen.tsx
+│   │   ├── CropAreaDetailsScreen.tsx
+│   │   ├── CropAreaFormScreen.tsx
+│   │   ├── CropAreasScreen.tsx
+│   │   ├── DashboardScreen.tsx
+│   │   ├── FarmFormScreen.tsx
+│   │   ├── FarmsScreen.tsx
+│   │   ├── LoginScreen.tsx
+│   │   ├── ProfileScreen.tsx
+│   │   ├── RecommendationsScreen.tsx
+│   │   ├── RegisterScreen.tsx
+│   │   └── WelcomeScreen.tsx
+│   ├── services/
+│   │   ├── alertService.ts
+│   │   ├── api.ts
+│   │   ├── authService.ts
+│   │   ├── cropAreaService.ts
+│   │   ├── farmService.ts
+│   │   ├── recommendationService.ts
+│   │   ├── riskAnalysisService.ts
+│   │   ├── satelliteDataService.ts
+│   │   ├── sensorReadingService.ts
+│   │   └── sensorService.ts
+│   ├── types/
+│   │   ├── ClimateAlert.ts
+│   │   ├── CropArea.ts
+│   │   ├── Dashboard.ts
+│   │   ├── Farm.ts
+│   │   ├── Recommendation.ts
+│   │   ├── SatelliteData.ts
+│   │   ├── Sensor.ts
+│   │   ├── SensorReading.ts
+│   │   └── User.ts
+│   └── utils/
+│       ├── apiMappers.ts
+│       ├── formatDate.ts
+│       ├── geoJsonHelpers.ts
+│       ├── statusHelpers.ts
+│       └── validators.ts
+├── .gitignore
+├── .npmrc
+├── app.json
+├── App.tsx
+├── babel.config.js
+├── index.ts
+├── package-lock.json
+├── package.json
+├── README.md
+└── tsconfig.json
+
 ```
 
 ## Como executar
@@ -164,34 +236,17 @@ npm install
 Executar o app:
 
 ```bash
-npx expo start -c
-```
-
-Executar no Android:
-
-```bash
-npm run android
-```
-
-Executar no iOS:
-
-```bash
-npm run ios
-```
-
-Executar no navegador:
-
-```bash
-npm run web
+npx expo start
 ```
 
 ## Integrantes
 
 | Nome | RM |
 |---|---|
-| Lucas Gonçalves Viana | RM |
+| Lucas Gonçalves Viana | RM563254 |
 | Deryk de Souza Queiroz | RM563412 |
-| Vinicius Paschoeto da Silva | RM |
+| Vinicius Paschoeto da Silva | RM563089 |
+| Felipe Wiclif Leal da Silva | RM563901 |
 
 ## Links
 
@@ -202,4 +257,4 @@ npm run web
 
 ## Turma
 
-2TDS — Global Solution 2026/1 — FIAP
+2TDSPX — Global Solution — FIAP
